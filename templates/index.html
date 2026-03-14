@@ -3,105 +3,74 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Puzzle BFS</title>
+<title>Puzzle BFS/title>
 
 <style>
 
 body{
-background:#020202;
+background:#050505;
 color:#00ff9c;
 font-family:monospace;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
 margin:0;
 }
 
 .container{
-
-text-align:center;
 padding:40px;
 border:2px solid #00ff9c;
 border-radius:10px;
-
-box-shadow:
-0 0 10px #00ff9c,
-0 0 40px #00ff9c;
-
+box-shadow:0 0 10px #00ff9c,0 0 40px #00ff9c;
+text-align:center;
 }
 
 h1{
-
-text-shadow:
-0 0 10px #00ff9c,
-0 0 20px #00ff9c;
-
+margin-bottom:20px;
 }
 
 input{
-
 padding:10px;
 background:#111;
 border:none;
 color:#00ff9c;
 border-bottom:2px solid #00ff9c;
-
 }
 
 button{
-
 padding:10px 20px;
 margin-left:10px;
 background:#00ff9c;
 border:none;
 cursor:pointer;
-
-box-shadow:
-0 0 10px #00ff9c,
-0 0 20px #00ff9c;
-
 }
 
 button:hover{
-
 background:#00cc7a;
+}
 
+.paso{
+margin-top:20px;
 }
 
 .puzzle{
-
 display:grid;
 grid-template-columns:repeat(4,60px);
 gap:10px;
 justify-content:center;
-margin-top:30px;
-
+margin-top:10px;
 }
 
 .celda{
-
 width:60px;
 height:60px;
-
 display:flex;
-justify-content:center;
 align-items:center;
-
+justify-content:center;
 border:2px solid #00ff9c;
-
+box-shadow:0 0 10px #00ff9c;
 font-size:22px;
-
-box-shadow:
-0 0 10px #00ff9c;
-
-}
-
-.info{
-
-margin-top:20px;
-font-size:14px;
-
 }
 
 </style>
@@ -114,13 +83,11 @@ font-size:14px;
 
 <h1>Puzzle BFS Solver</h1>
 
-<input id="estado" placeholder="Ejemplo: 4,2,3,1">
+<input id="estado" type="text" placeholder="Ejemplo: 4,2,3,1">
 
 <button onclick="resolver()">Resolver</button>
 
-<div class="info" id="paso"></div>
-
-<div id="puzzle" class="puzzle"></div>
+<div id="resultado"></div>
 
 </div>
 
@@ -130,65 +97,48 @@ async function resolver(){
 
 let estado = document.getElementById("estado").value
 
+if(!estado){
+alert("Ingresa un estado ejemplo: 4,2,3,1")
+return
+}
+
 let res = await fetch("/resolver",{
-
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
 body:JSON.stringify({estado:estado})
-
 })
 
 let data = await res.json()
 
-animar(data)
+let contenedor = document.getElementById("resultado")
+contenedor.innerHTML=""
 
-}
+data.forEach((paso,i)=>{
 
-function dibujar(tablero){
+let bloque = document.createElement("div")
+bloque.className="paso"
 
-let puzzle = document.getElementById("puzzle")
+let titulo = document.createElement("div")
+titulo.innerHTML="<b>Paso "+i+"</b>"
 
-puzzle.innerHTML=""
+let puzzle = document.createElement("div")
+puzzle.className="puzzle"
 
-tablero.forEach(num=>{
-
+paso.forEach(num=>{
 let celda = document.createElement("div")
-
 celda.className="celda"
-
 celda.innerText=num
-
 puzzle.appendChild(celda)
-
 })
 
-}
+bloque.appendChild(titulo)
+bloque.appendChild(puzzle)
 
-function animar(pasos){
+contenedor.appendChild(bloque)
 
-let i=0
-
-let intervalo = setInterval(()=>{
-
-if(i>=pasos.length){
-
-clearInterval(intervalo)
-
-return
-
-}
-
-document.getElementById("paso").innerText="Paso "+i
-
-dibujar(pasos[i])
-
-i++
-
-},800)
+})
 
 }
 
