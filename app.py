@@ -3,10 +3,13 @@ from bfs import buscar_solucion_BSF
 
 app = Flask(__name__)
 
+# Ruta principal (Frontend)
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
+# API que resuelve el puzzle
 @app.route("/resolver", methods=["POST"])
 def resolver():
 
@@ -18,17 +21,20 @@ def resolver():
     nodo_solucion = buscar_solucion_BSF(estado_inicial, solucion)
 
     resultado = []
-    nodo = nodo_solucion
 
-    while nodo.get_padre() != None:
-        resultado.append(nodo.get_datos())
-        nodo = nodo.get_padre()
+    if nodo_solucion is not None:
+        nodo = nodo_solucion
 
-    resultado.append(estado_inicial)
-    resultado.reverse()
+        while nodo.get_padre() != None:
+            resultado.append(nodo.get_datos())
+            nodo = nodo.get_padre()
+
+        resultado.append(estado_inicial)
+        resultado.reverse()
 
     return jsonify(resultado)
 
 
+# Ejecutar local
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
