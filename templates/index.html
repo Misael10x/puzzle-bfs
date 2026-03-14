@@ -9,13 +9,13 @@
 
 <div class="container">
 
-<h1>Puzzle Solver BFS</h1>
+<h1>Puzzle BFS Solver</h1>
 
 <input id="estado" placeholder="Ejemplo: 4,2,3,1">
 
 <button onclick="resolver()">Resolver</button>
 
-<pre id="resultado"></pre>
+<div id="resultado"></div>
 
 </div>
 
@@ -35,8 +35,34 @@ body:JSON.stringify({estado:estado})
 
 let data = await res.json()
 
-document.getElementById("resultado").innerText =
-JSON.stringify(data,null,2)
+let contenedor = document.getElementById("resultado")
+contenedor.innerHTML = ""
+
+data.forEach((paso,i)=>{
+
+let fila = document.createElement("div")
+fila.className="paso"
+
+let titulo = document.createElement("h3")
+titulo.innerText="Paso "+i
+
+fila.appendChild(titulo)
+
+let puzzle = document.createElement("div")
+puzzle.className="puzzle"
+
+paso.forEach(num=>{
+let celda = document.createElement("div")
+celda.className="celda"
+celda.innerText=num
+puzzle.appendChild(celda)
+})
+
+fila.appendChild(puzzle)
+
+contenedor.appendChild(fila)
+
+})
 
 }
 

@@ -1,25 +1,25 @@
 body{
 
-background:#0a0a0a;
-color:#0ff;
+background:#050505;
 font-family:Arial;
+color:#0ff;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
 
 }
 
 .container{
 
+width:500px;
+padding:30px;
 border:2px solid #0ff;
-padding:40px;
-border-radius:10px;
+border-radius:12px;
 
 box-shadow:
 0 0 10px #0ff,
-0 0 20px #0ff,
-0 0 40px #0ff;
+0 0 30px #0ff;
 
 text-align:center;
 
@@ -27,20 +27,20 @@ text-align:center;
 
 h1{
 
-color:#f0f;
+color:#ff00ff;
 
 text-shadow:
-0 0 10px #f0f,
-0 0 20px #f0f;
+0 0 10px #ff00ff,
+0 0 20px #ff00ff;
 
 }
 
 input{
 
 padding:10px;
-border:none;
-outline:none;
+width:200px;
 background:#111;
+border:none;
 color:#0ff;
 border-bottom:2px solid #0ff;
 
@@ -48,8 +48,8 @@ border-bottom:2px solid #0ff;
 
 button{
 
-margin-top:20px;
-padding:10px 20px;
+margin-left:10px;
+padding:10px 15px;
 background:#0ff;
 border:none;
 cursor:pointer;
@@ -62,17 +62,34 @@ box-shadow:
 
 button:hover{
 
-background:#f0f;
-
-box-shadow:
-0 0 20px #f0f,
-0 0 40px #f0f;
+background:#ff00ff;
 
 }
 
-pre{
+.paso{
 
 margin-top:20px;
-color:#0f0;
+
+}
+
+.puzzle{
+
+display:grid;
+grid-template-columns:repeat(4,50px);
+gap:10px;
+justify-content:center;
+margin-top:10px;
+
+}
+
+.celda{
+
+background:#111;
+border:2px solid #0ff;
+padding:10px;
+font-size:20px;
+
+box-shadow:
+0 0 10px #0ff;
 
 }
