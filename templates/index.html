@@ -1,89 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<meta charset="UTF-8">
-<title>Puzzle BFS/title>
-
-<style>
-
-body{
-background:#050505;
-color:#00ff9c;
-font-family:monospace;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-margin:0;
-}
-
-.container{
-padding:40px;
-border:2px solid #00ff9c;
-border-radius:10px;
-box-shadow:0 0 10px #00ff9c,0 0 40px #00ff9c;
-text-align:center;
-}
-
-h1{
-margin-bottom:20px;
-}
-
-input{
-padding:10px;
-background:#111;
-border:none;
-color:#00ff9c;
-border-bottom:2px solid #00ff9c;
-}
-
-button{
-padding:10px 20px;
-margin-left:10px;
-background:#00ff9c;
-border:none;
-cursor:pointer;
-}
-
-button:hover{
-background:#00cc7a;
-}
-
-.paso{
-margin-top:20px;
-}
-
-.puzzle{
-display:grid;
-grid-template-columns:repeat(4,60px);
-gap:10px;
-justify-content:center;
-margin-top:10px;
-}
-
-.celda{
-width:60px;
-height:60px;
-display:flex;
-align-items:center;
-justify-content:center;
-border:2px solid #00ff9c;
-box-shadow:0 0 10px #00ff9c;
-font-size:22px;
-}
-
-</style>
-
+<title>Puzzle BFS</title>
+<link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Puzzle BFS Solver</h1>
+<h1>Puzzle BFS</h1>
 
-<input id="estado" type="text" placeholder="Ejemplo: 4,2,3,1">
+<input id="estado" placeholder="Ejemplo: 4,2,3,1">
 
 <button onclick="resolver()">Resolver</button>
 
@@ -97,11 +25,6 @@ async function resolver(){
 
 let estado = document.getElementById("estado").value
 
-if(!estado){
-alert("Ingresa un estado ejemplo: 4,2,3,1")
-return
-}
-
 let res = await fetch("/resolver",{
 method:"POST",
 headers:{
@@ -113,15 +36,17 @@ body:JSON.stringify({estado:estado})
 let data = await res.json()
 
 let contenedor = document.getElementById("resultado")
-contenedor.innerHTML=""
+contenedor.innerHTML = ""
 
 data.forEach((paso,i)=>{
 
-let bloque = document.createElement("div")
-bloque.className="paso"
+let fila = document.createElement("div")
+fila.className="paso"
 
-let titulo = document.createElement("div")
-titulo.innerHTML="<b>Paso "+i+"</b>"
+let titulo = document.createElement("h3")
+titulo.innerText="Paso "+i
+
+fila.appendChild(titulo)
 
 let puzzle = document.createElement("div")
 puzzle.className="puzzle"
@@ -133,10 +58,9 @@ celda.innerText=num
 puzzle.appendChild(celda)
 })
 
-bloque.appendChild(titulo)
-bloque.appendChild(puzzle)
+fila.appendChild(puzzle)
 
-contenedor.appendChild(bloque)
+contenedor.appendChild(fila)
 
 })
 
