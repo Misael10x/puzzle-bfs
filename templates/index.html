@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Puzzle BFS</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Puzzle Solver BFS</h1>
+
+<input id="estado" placeholder="Ejemplo: 4,2,3,1">
+
+<button onclick="resolver()">Resolver</button>
+
+<pre id="resultado"></pre>
+
+</div>
+
+<script>
+
+async function resolver(){
+
+let estado = document.getElementById("estado").value
+
+let res = await fetch("/resolver",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({estado:estado})
+})
+
+let data = await res.json()
+
+document.getElementById("resultado").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+</html>
