@@ -1,40 +1,79 @@
 from flask import Flask, render_template, request, jsonify
-from bfs import buscar_solucion_BSF
+from collections import deque
 
 app = Flask(__name__)
 
-# Ruta principal (Frontend)
+# Grafo de vuelos
+vuelos = {
+    "JiloYork": ["CDMX", "Hidalgo"],
+    "Hidalgo": ["SLP", "JiloYork", "Monterrey"],
+    "Monterrey": ["CDMX", "Hidalgo"],
+    "QRO": ["SLP"],
+    "SLP": ["Zacatecas", "QRO", "Hidalgo", "CDMX", "Tamaulipas"],
+    "Zacatecas": ["GDL", "SLP"],
+    "Morelos": ["CDMX", "Tamaulipas"],
+    "CDMX":["Monterrey", "Tamaulipas", "Morelos", "JiloYork", "SLP"],
+    "Tamaulipas":["CDMX", "Morelos", "SLP"],
+    "GDL":["Zacatecas"]
+}
+
+# BFS para encontrar ruta
+def bfs_vuelos(inicio, destino):
+
+    cola = deque()
+    cola.append((inicio, [inicio]))
+
+    visitados = set()
+
+    while cola:
+
+        ciudad, ruta = cola.popleft()
+
+        if ciudad == destino:
+            return ruta
+
+        visitados.add(ciudad)
+
+        for vecino in vuelos.get(ciudad, []):
+            if vecino not in visitados:
+                cola.append((vecino, ruta + [vecino]))
+
+    return None
+
+
+# Ruta principal
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
-# API que resuelve el puzzle
-@app.route("/resolver", methods=["POST"])
-def resolver():
+# API de búsqueda
+@app.route("/buscar", methods=["POST"])
+def buscar():
 
-    estado = request.json["estado"]
+    data = request.json
 
-    estado_inicial = list(map(int, estado.split(",")))
-    solucion = [1,2,3,4]
+    if not data:
+        return jsonify({"error": "Datos requeridos"}), 400
 
-    nodo_solucion = buscar_solucion_BSF(estado_inicial, solucion)
+    inicio = data.get("inicio")
+    destino = data.get("destino")
 
-    resultado = []
+    if not inicio or not destino:
+        return jsonify({"error": "Completa origen y destino"}), 400
 
-    if nodo_solucion is not None:
-        nodo = nodo_solucion
+    ruta = bfs_vuelos(inicio, destino)
 
-        while nodo.get_padre() != None:
-            resultado.append(nodo.get_datos())
-            nodo = nodo.get_padre()
+    if not ruta:
+        return jsonify({"error": "No hay ruta disponible"}), 400
 
-        resultado.append(estado_inicial)
-        resultado.reverse()
+    return jsonify({
+        "inicio": inicio,
+        "destino": destino,
+        "ruta": ruta
+    })
 
-    return jsonify(resultado)
 
-
-# Ejecutar local
+# Ejecutar
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
